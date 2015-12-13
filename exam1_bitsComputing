@@ -1,0 +1,373 @@
+程序设计实验一（位运算）
+ 上程序设计课（csapp）接触位运算感觉蛮有意思的，虽然老师讲得好快啊。。。。这大概也是我第一次用位运算来实现功能，最后还把离散的数理逻辑用上了，哎，也真心佩服自己了，把代码贴出来给自己留个纪念吧，不然放文件夹里估计也生锈了。(好吧，周神觉得我应该放其他地方去，我另外再找个地方存一下把，哎，不是个好习惯)
+附带几个位运算有关的网站：
+http://www.cppblog.com/aqazero/archive/2012/11/10/8284.html（c语言优先级列表，这表太好了，做题目的时候忘记的不懂都来翻一下，感觉慢慢都要记住了。。额）
+http://www.cnblogs.com/graphics/archive/2010/06/21/1752421.h（这是马慧找到的，只能说，没看到这个之前，，，，不，看到这个之后，瞬间惊呆了，算法的魅力吧。）
+http://blog.sina.com.cn/s/blog_66ad7bba0100hf9k.html（一些有意思的位运算技巧）
+/*  
+ * CS:APP Data Lab 
+ * 
+ * bits.c - Source file with your solutions to the Lab.
+ *          This is the file you will hand in to your instructor.
+ *
+ * WARNING: Do not include the <stdio.h> header; it confuses the dlc
+ * compiler. You can still use printf for debugging without including
+ * <stdio.h>, although you might get a compiler warning. In general,
+ * it's not good practice to ignore compiler warnings, but in this
+ * case it's OK.  
+ */
+
+#include "btest.h"
+#include <limits.h>
+
+/*
+ * Instructions to Students:
+ *
+ * STEP 1: Fill in the following struct with your identifying info.
+ */
+team_struct team =
+{
+   /* Team name: Replace with either:
+      Your login ID if working as a one person team
+      or, ID1+ID2 where ID1 is the login ID of the first team member
+      and ID2 is the login ID of the second team member */
+    "SA15226245+SA15226240", 
+   /* Student name 1: Replace with the full name of first team member */
+   "杨宗明",
+   /* Login ID 1: Replace with the login ID of first team member */
+   "SA15226***",
+
+   /* The following should only be changed if there are two team members */
+   /* Student name 2: Full name of the second team member */
+   "周子翔",
+   /* Login ID 2: Login ID of the second team member */
+   "SA15226***"
+};
+
+#if 0
+/*
+ * STEP 2: Read the following instructions carefully.
+ */
+
+You will provide your solution to the Data Lab by
+editing the collection of functions in this source file.
+
+CODING RULES:
+ 
+  Replace the "return" statement in each function with one
+  or more lines of C code that implements the function. Your code 
+  must conform to the following style:
+ 
+  int Funct(arg1, arg2, ...) {
+      /* brief description of how your implementation works */
+      int var1 = Expr1;
+      ...
+      int varM = ExprM;
+
+      varJ = ExprJ;
+      ...
+      varN = ExprN;
+      return ExprR;
+  }
+
+  Each "Expr" is an expression using ONLY the following:
+  1. Integer constants 0 through 255 (0xFF), inclusive. You are
+      not allowed to use big constants such as 0xffffffff.
+  2. Function arguments and local variables (no global variables).
+  3. Unary integer operations ! ~
+  4. Binary integer operations & ^ | + << >>
+    
+  Some of the problems restrict the set of allowed operators even further.
+  Each "Expr" may consist of multiple operators. You are not restricted to
+  one operator per line.
+
+  You are expressly forbidden to:
+  1. Use any control constructs such as if, do, while, for, switch, etc.
+  2. Define or use any macros.
+  3. Define any additional functions in this file.
+  4. Call any functions.
+  5. Use any other operations, such as &&, ||, -, or ?:
+  6. Use any form of casting.
+ 
+  You may assume that your machine:
+  1. Uses 2s complement, 32-bit representations of integers.
+  2. Performs right shifts arithmetically.
+  3. Has unpredictable behavior when shifting an integer by more
+     than the word size.
+
+EXAMPLES OF ACCEPTABLE CODING STYLE:
+  /*
+   * pow2plus1 - returns 2^x + 1, where 0 <= x <= 31
+   */
+  int pow2plus1(int x) {
+     /* exploit ability of shifts to compute powers of 2 */
+     return (1 << x) + 1;
+  }
+
+  /*
+   * pow2plus4 - returns 2^x + 4, where 0 <= x <= 31
+   */
+  int pow2plus4(int x) {
+     /* exploit ability of shifts to compute powers of 2 */
+     int result = (1 << x);
+     result += 4;
+     return result;
+  }
+
+
+NOTES:
+  1. Use the dlc (data lab checker) compiler (described in the handout) to 
+     check the legality of your solutions.
+  2. Each function has a maximum number of operators (! ~ & ^ | + << >>)
+     that you are allowed to use for your implementation of the function. 
+     The max operator count is checked by dlc. Note that '=' is not 
+     counted; you may use as many of these as you want without penalty.
+  3. Use the btest test harness to check your functions for correctness.
+  4. The maximum number of ops for each function is given in the
+     header comment for each function. If there are any inconsistencies 
+     between the maximum ops in the writeup and in this file, consider
+     this file the authoritative source.
+#endif
+
+/*
+ * STEP 3: Modify the following functions according the coding rules.
+ * 
+ *   IMPORTANT. TO AVOID GRADING SURPRISES:
+ *   1. Use the dlc compiler to check that your solutions conform
+ *      to the coding rules.
+ *   2. Use the btest test harness to check that your solutions produce 
+ *      the correct answers. Watch out for corner cases around Tmin and Tmax.
+ */
+/* 
+ * bitNor - ~(x|y) using only ~ and & 
+ *   Example: bitNor(0x6, 0x5) = 0xFFFFFFF8
+ *   Legal ops: ~ &
+ *   Max ops: 8
+ *   Rating: 1
+ */
+int bitNor(int x, int y) {
+  return ~x & ~y;							//将~(x|y)的~放入括号内部，改变“|”为“&”
+}
+
+/* 
+ * bitXor - x^y using only ~ and & 
+ *   Example: bitXor(4, 5) = 1
+ *   Legal ops: ~ &
+ *   Max ops: 14
+ *   Rating: 2
+ */
+int bitXor(int x, int y) {
+										
+  return (~(~x & ~y) & ~(x & y ));					//首先将异或转化为(x|y)&(~x & ~y);
+									                        //将前面的x|y转化为~(~x & ~y)便可以了；
+}
+/* 
+ * isNotEqual - return 0 if x == y, and 1 otherwise 
+ *   Examples: isNotEqual(5,5) = 0, isNotEqual(4,5) = 1
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 6
+ *   Rating: 2
+ */
+int isNotEqual(int x, int y) {
+				
+  return !!(x^y);							//这里a^a==0，用!做成逻辑true和false,不过要再加一个!来满足题设return要求
+
+}
+/* 
+ * getByte - Extract byte n from word x
+ *   Bytes numbered from 0 (LSB) to 3 (MSB)
+ *   Examples: getByte(0x12345678,1) = 0x56
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 6
+ *   Rating: 2
+ */
+int getByte(int x, int n) {
+  return x>>(n<<3) & 0xFF;						//将所求字节移位至最低，与0xFF相与，排除高位的1
+}
+/* 
+ * copyLSB - set all bits of result to least significant bit of x
+ *   Example: copyLSB(5) = 0xFFFFFFFF, copyLSB(6) = 0x00000000
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 5
+ *   Rating: 2
+ */
+int copyLSB(int x) {
+  return x<<31>>31;							//将x先左移31位，得到最低位，再算数右移，0或1都可行
+}
+/* 
+ * logicalShift - shift x to the right by n, using a logical shift
+ *   Can assume that 1 <= n <= 31
+ *   Examples: logicalShift(0x87654321,4) = 0x08765432
+ *   Legal ops: ~ & ^ | + << >>
+ *   Max ops: 16
+ *   Rating: 3 
+ */
+int logicalShift(int x, int n) {
+  return  x>>n & ~(1<<31>>n<<1);					//通过1<<31构造出1000 0000.....然后>>n<<1构造出11110000
+									                      //前面有n个1，取反则为000000111111....与x>>n相与，可排除高位1的情况
+}
+/*
+ * bitCount - returns count of number of 1's in word
+ *   Examples: bitCount(5) = 2, bitCount(7) = 3
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 40
+ *   Rating: 4
+ */
+int bitCount(int x) {
+	int a = 0x55 + (0x55<<8) ;			
+	int b = 0x33 + (0x33<<8) ;			
+	int c = 0x0F + (0x0F<<8) ;			
+	int d = 0xFF + (0xFF<<16);					//d=0x00FF00FF
+	int e = 0xFF + (0xFF<<8);					//e=0x0000FFFF
+	a = a + (a<<16);				//a=0x55555555,		因为类似int a = 0x55 + (0x55>>8) + (0x55>>16) + (0x55>>24);这种形式会超出max ops(42个)
+	b = b + (b<<16);				//b=0x33333333,		所以节省操作符采用a = 0x55 + (0x55>>8); a = a + (a<<16);(36个)
+	c = c + (c<<16);				//c=0x0F0F0F0F
+
+
+	x = (x & a) + ((x>>1) & a);			//首先把32位分成16份，每份两个数，我们先求出每相邻两个数一共有多少个1，				 
+	x = (x & b) + ((x>>2) & b);			//如此对于每一份，左边1个数是n&010101...01,右边是(n>>1) & 0101..01		
+	x = (x & c) + ((x>>4) & c);			//如此一次后，这16份每份存的都是原数中1的个数	
+	x = (x & d) + ((x>>8) & d);			//之后16份变8份，8份变4份，直到变成1份
+	x = (x & e) + ((x>>16) & e);
+	return x ;
+
+
+/*	int y0 = 0x0F & x;
+	int y1 = 0x0F & x>>4;
+	int y2 = 0x0F & x>>8;
+	int y3 = 0x0F & x>>12;
+	int y4 = 0x0F & x>>16;
+	int y5 = 0x0F & x>>20;
+	int y6 = 0x0F & x>>24;
+	int y7 = 0x0F & x>>28;
+	
+	y0 = y0 + ~(y0>>1) + ~(y0>>2) + ~(y0>>3); 	//计算每4个一组的1的数量再相加，不过太多了不满足Max ops: 40
+	y1 = y1 + ~(y1>>1) + ~(y1>>2) + ~(y1>>3);
+	y2 = y2 + ~(y2>>1) + ~(y2>>2) + ~(y2>>3);
+	y3 = y3 + ~(y3>>1) + ~(y3>>2) + ~(y3>>3);
+	y4 = y4 + ~(y4>>1) + ~(y4>>2) + ~(y4>>3);
+	y5 = y5 + ~(y5>>1) + ~(y5>>2) + ~(y5>>3);
+	y6 = y6 + ~(y6>>1) + ~(y6>>2) + ~(y6>>3);
+	y7 = y7 + ~(y7>>1) + ~(y7>>2) + ~(y7>>3);
+
+	return y0+y1+y2+y3+y4+y5+y6+y7+24;
+*/
+
+}
+/* 
+ * bang - Compute !x without using !
+ *   Examples: bang(3) = 0, bang(0) = 1
+ *   Legal ops: ~ & ^ | + << >>
+ *   Max ops: 12
+ *   Rating: 4 
+ */
+int bang(int x) {
+	int y1 = x  | x>>16;
+	int y2 = y1 | y1>>8;
+	int y3 = y2 | y2>>4;
+	int y4 = y3 | y3>>2;
+	int y5 = y4 | y4>>1;
+
+  return (y5 & 0x1) ^ 0x1;						//将高16位与低16位“|”，将结果的高8位与低8位“|”，再将结果的高4位与低4位“|”，依次减半
+								                    	//直到结果的高1位与低1位“|”,等价于将32位字符位“|”,即可判断x是否为0
+}
+/* 
+ * leastBitPos - return a mask that marks the position of the
+ *               least significant 1 bit. If x == 0, return 0
+ *   Example: leastBitPos(96) = 0x20
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 6
+ *   Rating: 4 
+ */
+int leastBitPos(int x) {
+  return x & (~x + 1);							//x&-x,利用取负数特性
+}
+/* 
+ * TMax - return maximum two's complement integer 
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 4
+ *   Rating: 1
+ */
+int tmax(void) {
+  return ~(1<<31);							//1左移31位，变成100000,取反后变成01111111，即是TMax
+}
+/* 
+ * isNonNegative - return 1 if x >= 0, return 0 otherwise 
+ *   Example: isNonNegative(-1) = 0.  isNonNegative(0) = 1.
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 6
+ *   Rating: 3
+ */
+int isNonNegative(int x) {
+  return !(x>>31);							//将x右移31位,将符号位扩展至整个32位，如果非0，则表明是负数返回0，否则返回1		
+}
+/* 
+ * isGreater - if x > y  then return 1, else return 0 
+ *   Example: isGreater(4,5) = 0, isGreater(5,4) = 1
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 24
+ *   Rating: 3
+ */
+int isGreater(int x, int y) {
+	int sx = x>>31 & 0x1;
+	int sy = y>>31 & 0x1;
+	int s  = (x+~y+1)>>31 & 0x1;
+   return ((sy & (!sx | !s)) | (!sx & !sy & !s)) & !!(x^y);			//提取出x的符号位sx,y的符号位sy，x-y的符号位s，作比较
+										//并将x-y的溢出情况考虑在内,一共有4中情况为1,sx,sy,s均表示符号位
+										//sx	sy	s	return
+										//0	0	0	1
+										//0	1	0	1
+										//0	1	1	1
+										//1	1	0	1
+										//将以上四中情况统筹,并将x==y的情况排除便可
+										
+//  return (((!sx) & (!sy) & (!s))|((!sx) & sy)|(sx & sy & (!s))) & !!(x^y);	//备注：没加!!，(x^y)就有错误，思考一下，另外，这个return表达式值得修改哈
+}
+/* 
+ * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
+ *  Round toward zero
+ *   Examples: divpwr2(15,1) = 7, divpwr2(-33,4) = -2
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 15
+ *   Rating: 2
+ */
+int divpwr2(int x, int n) {
+	int sx = x>>31;							//根据(x<0?(x + (1<<k)-1):x)>>k一步一步修改，
+	int y = (1<<n) + ~0x0;						//将条件语句用x+z统一起来，z=sx&((1<<k)-1),x为正数，则z=0，否则z=(1<<k)-1
+	int z = sx & y;
+	return (x + z)>>n;						//特别注意&,>>,+的优先级！！！！
+//return (x+(x>>31) & ((1<<n)+~0x0))>>n					//x+1>>n,	1<<n + ~0x0这些都不是想当然的，其实都会先做加法！！！！！！
+	
+}
+/* 
+ * abs - absolute value of x (except returns TMin for TMin)
+ *   Example: abs(-1) = 1.
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 10
+ *   Rating: 4
+ */
+int abs(int x) {
+	int sx = x>>31;
+  	return ((x & ~sx) +((~x+1)& sx));				//x>0返回x,x<0返回-x;则可以用x&~sx + (-x)&sx来判断到底需要哪一个
+									                          //这里的判断用sx,~sx &解决掉了
+}
+/* 
+ * addOK - Determine if can compute x+y without overflow
+ *   Example: addOK(0x80000000,0x80000000) = 0,
+ *            addOK(0x80000000,0x70000000) = 1, 
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 20
+ *   Rating: 3
+ */
+int addOK(int x, int y) {
+	int sx = x>>31;
+	int sy = y>>31;
+	int s  = (x+y)>>31;
+  return ((!sx) | (!sy) | (!!s)) & ((!!sx) | (!!sy) | (!s));		//根据加法溢出情况，只有两种会溢出
+									//sx	sy	s	return
+									//0	0	1	0
+									//1	1	0	0
+									//这两种情况下都返回0，用（!sx |!sy | s）&(sx | sy | !s)来返回
+									//不过当然，对于0,1可以直接用上式，但sx，sy,s若为全1要用!!s或!~s来转换成逻辑运算
+
+}
